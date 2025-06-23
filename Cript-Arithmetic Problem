@@ -1,0 +1,23 @@
+from itertools import permutations
+
+def solve(puzzle):
+    puzzle = puzzle.replace("==", "=")
+    words = puzzle.replace('+', ' ').replace('=', ' ').split()
+    letters = sorted(set(''.join(words)))
+    if len(letters) > 10: return print("Too many letters")
+
+    first_letters = {w[0] for w in words}
+
+    for perm in permutations(range(10), len(letters)):
+        mapping = dict(zip(letters, perm))
+        if any(mapping[c] == 0 for c in first_letters): continue
+        expr = puzzle
+        for c in mapping: expr = expr.replace(c, str(mapping[c]))
+        if eval(expr.replace('=', '==')):
+            print("Solution found:")
+            print(mapping)
+            print(expr.replace('=', '=='))
+            return
+    print("No solution exists.")
+
+solve("SEND + MORE == MONEY")
